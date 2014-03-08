@@ -21,8 +21,8 @@ namespace Sweet.Formula.Core
 
         public double Eval()
         {
-            Expr expr = parser.Parse(this.expr);
-            return expr.Eval();
+            Expr parsedExpr = parser.Parse(this.expr);
+            return parsedExpr.Eval();
         }
     }
 }

@@ -17,5 +17,10 @@ namespace Sweet.Formula.Core.Expressions
         {
             return variableValueReader(name);
         }
+
+        protected override void WriteSelf(System.IO.TextWriter output)
+        {
+            output.Write(name);
+        }
     }
 }

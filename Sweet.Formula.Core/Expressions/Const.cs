@@ -13,5 +13,10 @@
         {
             return value;
         }
+
+        protected override void WriteSelf(System.IO.TextWriter output)
+        {
+            output.Write(value);
+        }
     }
 }

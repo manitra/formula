@@ -28,11 +28,11 @@ namespace Sweet.Formula.Core.Parsing
         {
             var pipe = new Queue<Expr>();
             var gotToken = true;
+            Token lastOp = null;
 
             while (gotToken)
             {
                 var token = tokens.Current;
-                Token lastOp = null;
 
                 switch (token.Type)
                 {
@@ -60,9 +60,10 @@ namespace Sweet.Formula.Core.Parsing
                         throw Unexpected(token);
                 }
 
-                if (lastOp != null)
+                if (lastOp != null && pipe.Count >= 2)
                 {
                     var op = opFactory.Create(lastOp.Value).AddChildren(pipe);
+                    lastOp = null;
                     pipe.Clear();
                     pipe.Enqueue(op);
                 }

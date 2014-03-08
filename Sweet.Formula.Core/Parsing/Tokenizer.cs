@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 using Sweet.Formula.Core.Expressions;
+using System.Globalization;
 
 namespace Sweet.Formula.Core.Parsing
 {
     public class Tokenizer
     {
-        private SimpleOperationFactory opFactory;
+        private readonly SimpleOperationFactory opFactory;
 
         public Tokenizer()
         {
@@ -18,30 +19,43 @@ namespace Sweet.Formula.Core.Parsing
         {
             using (var chars = p.GetEnumerator())
             {
-                bool gotChars = chars.MoveNext();
-                while (gotChars)
+                bool hasChar = chars.MoveNext();
+                while (hasChar)
                 {
                     var c = chars.Current;
-                    if (c == ' ')
-                        continue;
-                    if (c == '(')
-                        yield return new Token { Type = TokenType.OpeningParenthesis };
-                    else if (c == ')')
-                        yield return new Token { Type = TokenType.ClosingParenthesis };
-                    else if (opFactory.IsOperatorChar(c))
-                        yield return new Token { Type = TokenType.Operator, Value = c.ToString() };
-                    else if (IsAlpha(c))
-                        yield return new Token { Type = TokenType.Variable, Value = ReadAlpha(chars) };
-                    else if (IsNumeric(c))
-                        yield return new Token { Type = TokenType.Literal, Value = ReadNumeric(chars) };
-                    gotChars = chars.MoveNext();
+                    switch (c)
+                    {
+                        case ' ':
+                            hasChar = chars.MoveNext();
+                            break;
+                        case '(':
+                            yield return new Token { Type = TokenType.OpeningParenthesis };
+                            hasChar = chars.MoveNext();
+                            break;
+                        case ')':
+                            yield return new Token { Type = TokenType.ClosingParenthesis };
+                            hasChar = chars.MoveNext();
+                            break;
+                        default:
+                            if (opFactory.IsOperatorChar(c))
+                            {
+                                yield return new Token { Type = TokenType.Operator, Value = c.ToString(CultureInfo.InvariantCulture) };
+                                hasChar = chars.MoveNext();
+                            }
+                            else if (IsAlpha(c))
+                                yield return new Token { Type = TokenType.Variable, Value = ReadAlpha(chars, ref hasChar) };
+                            else if (IsNumeric(c))
+                                yield return new Token { Type = TokenType.Literal, Value = ReadNumeric(chars, ref hasChar) };
+                            break;
+                    }
+
                 }
             }
         }
 
-        private string ReadNumeric(System.CharEnumerator chars)
+        private string ReadNumeric(CharEnumerator chars, ref bool hasChar)
         {
-            return ReadWhile(chars, c => IsNumeric(c));
+            return ReadWhile(chars, IsNumeric, ref hasChar);
         }
 
         private bool IsNumeric(char c)
@@ -49,9 +63,9 @@ namespace Sweet.Formula.Core.Parsing
             return c >= '0' && c <= '9';
         }
 
-        private string ReadAlpha(System.CharEnumerator chars)
+        private string ReadAlpha(IEnumerator<char> chars, ref bool hasChar)
         {
-            return ReadWhile(chars, c => IsAlpha(c));
+            return ReadWhile(chars, IsAlpha, ref hasChar);
         }
 
         private bool IsAlpha(char c)
@@ -59,14 +73,13 @@ namespace Sweet.Formula.Core.Parsing
             return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
         }
 
-        private string ReadWhile(System.CharEnumerator chars, Predicate<char> predicate)
+        private string ReadWhile(IEnumerator<char> chars, Predicate<char> predicate, ref bool hasChar)
         {
             var result = new StringBuilder();
-            var gotToken = true;
-            while (gotToken && predicate(chars.Current))
+            while (hasChar && predicate(chars.Current))
             {
                 result.Append(chars.Current);
-                gotToken = chars.MoveNext();
+                hasChar = chars.MoveNext();
             }
             return result.ToString();
         }
