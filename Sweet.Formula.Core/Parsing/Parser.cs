@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Sweet.Formula.Core.Expressions;
 
 namespace Sweet.Formula.Core.Parsing
@@ -49,7 +50,7 @@ namespace Sweet.Formula.Core.Parsing
                         gotToken = tokens.MoveNext();
                         break;
                     case TokenType.Literal:
-                        pipe.Enqueue(new Const(double.Parse(token.Value)));
+                        pipe.Enqueue(new Const(double.Parse(token.Value, CultureInfo.InvariantCulture)));
                         gotToken = tokens.MoveNext();
                         break;
                     case TokenType.Operator:

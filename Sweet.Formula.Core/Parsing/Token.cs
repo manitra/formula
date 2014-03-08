@@ -23,7 +23,7 @@ namespace Sweet.Formula.Core.Parsing
                 case TokenType.EndOfFile:
                     return "[EOF]";
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    return Type.ToString() + ":" + Value;
             }
         }
     }

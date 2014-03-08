@@ -19,6 +19,7 @@ namespace Sweet.Formula.Core.Parsing
         {
             using (var chars = p.GetEnumerator())
             {
+                Token previousToken = null;
                 bool hasChar = chars.MoveNext();
                 while (hasChar)
                 {
@@ -29,23 +30,47 @@ namespace Sweet.Formula.Core.Parsing
                             hasChar = chars.MoveNext();
                             break;
                         case '(':
-                            yield return new Token { Type = TokenType.OpeningParenthesis };
+                            previousToken = new Token { Type = TokenType.OpeningParenthesis };
+                            yield return previousToken;
                             hasChar = chars.MoveNext();
                             break;
                         case ')':
-                            yield return new Token { Type = TokenType.ClosingParenthesis };
+                            previousToken = new Token { Type = TokenType.ClosingParenthesis };
+                            yield return previousToken;
+                            hasChar = chars.MoveNext();
+                            break;
+                        case '-':
+                            if (previousToken.Type == TokenType.Operator)
+                                goto case '0';
+                            else
+                                goto case '+';
+                            break;
+                        case '0':
+                        case '1':
+                        case '2':
+                        case '3':
+                        case '4':
+                        case '5':
+                        case '6':
+                        case '7':
+                        case '8':
+                        case '9':
+                            previousToken = new Token { Type = TokenType.Literal, Value = ReadNumeric(chars, ref hasChar) };
+                            yield return previousToken;
+                            break;
+                        case '+':
+                        case '/':
+                        case '*':
+                            previousToken = new Token { Type = TokenType.Operator, Value = c.ToString(CultureInfo.InvariantCulture) };
+                            yield return previousToken;
                             hasChar = chars.MoveNext();
                             break;
                         default:
-                            if (opFactory.IsOperatorChar(c))
+                            if (IsAlpha(c))
                             {
-                                yield return new Token { Type = TokenType.Operator, Value = c.ToString(CultureInfo.InvariantCulture) };
-                                hasChar = chars.MoveNext();
+                                previousToken = new Token { Type = TokenType.Variable, Value = ReadAlpha(chars, ref hasChar) };
+                                yield return previousToken;
                             }
-                            else if (IsAlpha(c))
-                                yield return new Token { Type = TokenType.Variable, Value = ReadAlpha(chars, ref hasChar) };
-                            else if (IsNumeric(c))
-                                yield return new Token { Type = TokenType.Literal, Value = ReadNumeric(chars, ref hasChar) };
                             break;
                     }
 
@@ -60,7 +85,7 @@ namespace Sweet.Formula.Core.Parsing
 
         private bool IsNumeric(char c)
         {
-            return c >= '0' && c <= '9';
+            return c >= '0' && c <= '9' || c == '-' || c == '.';
         }
 
         private string ReadAlpha(IEnumerator<char> chars, ref bool hasChar)
