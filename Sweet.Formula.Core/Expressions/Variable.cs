@@ -20,7 +20,7 @@ namespace Sweet.Formula.Core.Expressions
 
         protected override void WriteSelf(System.IO.TextWriter output)
         {
-            output.Write(name);
+            output.Write("@" + name);
         }
     }
 }

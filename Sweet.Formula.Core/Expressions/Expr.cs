@@ -11,6 +11,7 @@ namespace Sweet.Formula.Core.Expressions
             Children = new List<Expr>();
         }
 
+        public Expr Parent { get; private set; }
         public IList<Expr> Children { get; private set; }
 
         public abstract double Eval();
@@ -18,13 +19,14 @@ namespace Sweet.Formula.Core.Expressions
         public Expr AddChild(Expr child)
         {
             Children.Add(child);
+            child.Parent = this;
             return this;
         }
 
         public Expr AddChildren(IEnumerable<Expr> children)
         {
             foreach (var child in children)
-                Children.Add(child);
+                AddChild(child);
 
             return this;
         }
@@ -53,7 +55,7 @@ namespace Sweet.Formula.Core.Expressions
         {
             for (int i = 0; i < Children.Count; i++)
             {
-                var newIndents = CalculateChildIndents(parentIndents, i < Children.Count - 1);
+                var newIndents = CalculateChildIndents(parentIndents, i == Children.Count - 1);
                 Children[i].ToString(newIndents, output);
             }
         }
@@ -65,16 +67,16 @@ namespace Sweet.Formula.Core.Expressions
                 switch (t)
                 {
                     case IndentType.Blank:
-                        output.Write("  ");
+                        output.Write(" ");
                         break;
                     case IndentType.MiddleWithElement:
-                        output.Write("|-");
+                        output.Write("├");
                         break;
                     case IndentType.MiddleWithoutElement:
-                        output.Write("| ");
+                        output.Write("│");
                         break;
                     case IndentType.Last:
-                        output.Write("\\-");
+                        output.Write("└");
                         break;
                     default:
                         throw new ArgumentOutOfRangeException("indents", "Unknown indent type : " + t);
@@ -106,7 +108,7 @@ namespace Sweet.Formula.Core.Expressions
                 result.Add(childIndent);
             }
 
-            result.Add(isLast ? IndentType.MiddleWithElement : IndentType.Last);
+            result.Add(isLast ? IndentType.Last : IndentType.MiddleWithElement);
 
             return result;
         }

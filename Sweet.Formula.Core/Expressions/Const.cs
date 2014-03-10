@@ -16,7 +16,7 @@
 
         protected override void WriteSelf(System.IO.TextWriter output)
         {
-            output.Write(value);
+            output.Write((value < 0 ? "(" : "") + value + (value < 0 ? ")" : ""));
         }
     }
 }
