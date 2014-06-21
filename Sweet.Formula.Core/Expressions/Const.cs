@@ -1,5 +1,7 @@
 ﻿namespace Sweet.Formula.Core.Expressions
 {
+    using Sweet.Formula.Core.Evaluation;
+
     public class Const : Expr
     {
         private readonly double value;
@@ -9,7 +11,7 @@
             this.value = value;
         }
 
-        public override double Eval()
+        public override double Eval(Scope scope)
         {
             return value;
         }

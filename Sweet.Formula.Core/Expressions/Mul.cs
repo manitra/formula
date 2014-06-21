@@ -2,7 +2,16 @@
 {
     public class Mul : SimpleOperation
     {
-        public Mul() : base((a, b) => a*b)
+        public override byte Priority
+        {
+            get
+            {
+                return 4;
+            }
+        }
+
+        public Mul()
+            : base((a, b) => a * b)
         {
         }
     }

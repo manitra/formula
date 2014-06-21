@@ -2,7 +2,16 @@
 {
     public class Div : SimpleOperation
     {
-        public Div() : base((a, b) => a/b)
+        public override byte Priority
+        {
+            get
+            {
+                return 4;
+            }
+        }
+
+        public Div()
+            : base((a, b) => a / b)
         {
         }
     }

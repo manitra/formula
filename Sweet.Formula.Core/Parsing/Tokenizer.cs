@@ -15,9 +15,9 @@ namespace Sweet.Formula.Core.Parsing
             opFactory = new SimpleOperationFactory();
         }
 
-        public IEnumerable<Token> Tokenize(string p)
+        public IEnumerable<Token> Tokenize(string input)
         {
-            using (var chars = p.GetEnumerator())
+            using (var chars = input.GetEnumerator())
             {
                 Token previousToken = null;
                 bool hasChar = chars.MoveNext();
@@ -44,7 +44,6 @@ namespace Sweet.Formula.Core.Parsing
                                 goto case '0';
                             else
                                 goto case '+';
-                            break;
                         case '0':
                         case '1':
                         case '2':

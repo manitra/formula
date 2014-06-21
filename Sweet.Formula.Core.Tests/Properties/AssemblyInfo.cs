@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Sweet.Formula.Core")]
+[assembly: AssemblyTitle("Sweet.Formula.Core.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("CRITEO")]
-[assembly: AssemblyProduct("Sweet.Formula.Core")]
+[assembly: AssemblyProduct("Sweet.Formula.Core.Tests")]
 [assembly: AssemblyCopyright("Copyright © CRITEO 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("90b7f76d-8895-46ac-8650-6505080ea871")]
+[assembly: Guid("ccfd87c2-6a4d-47a7-b803-92bf7c5aa698")]
 
 // Version information for an assembly consists of the following four values:
 //

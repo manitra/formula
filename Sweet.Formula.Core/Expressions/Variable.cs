@@ -2,20 +2,20 @@
 
 namespace Sweet.Formula.Core.Expressions
 {
+    using Sweet.Formula.Core.Evaluation;
+
     public class Variable : Expr
     {
         private readonly string name;
-        private readonly Func<string, double> variableValueReader;
 
-        public Variable(string name, Func<string, double> variableValueReader)
+        public Variable(string name)
         {
             this.name = name;
-            this.variableValueReader = variableValueReader;
         }
 
-        public override double Eval()
+        public override double Eval(Scope scope)
         {
-            return variableValueReader(name);
+            return scope.Get(name);
         }
 
         protected override void WriteSelf(System.IO.TextWriter output)

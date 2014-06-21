@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
 using Sweet.Formula.Core.Expressions;
@@ -27,9 +28,9 @@ namespace Sweet.Formula.Core.Parsing
 
         private Expr ParseExpr(IEnumerator<Token> tokens)
         {
-            var pipe = new Queue<Expr>();
+            var expressions = new Stack<Expr>();
+            var operations = new Stack<SimpleOperation>();
             var gotToken = true;
-            Token lastOp = null;
 
             while (gotToken)
             {
@@ -37,61 +38,62 @@ namespace Sweet.Formula.Core.Parsing
 
                 switch (token.Type)
                 {
-                    case TokenType.OpeningParenthesis:
-                        tokens.MoveNext();
-                        pipe.Enqueue(ParseExpr(tokens));
-                        break;
-                    case TokenType.ClosingParenthesis:
-                        tokens.MoveNext();
-                        gotToken = false;
-                        break;
+                    //
+                    // For expressions separated by operators
+                    // 
                     case TokenType.Variable:
-                        pipe.Enqueue(new Variable(token.Value, GetVariableValue));
+                        expressions.Push(new Variable(token.Value));
                         gotToken = tokens.MoveNext();
                         break;
                     case TokenType.Literal:
-                        pipe.Enqueue(new Const(double.Parse(token.Value, CultureInfo.InvariantCulture)));
+                        expressions.Push(new Const(double.Parse(token.Value, CultureInfo.InvariantCulture)));
                         gotToken = tokens.MoveNext();
                         break;
                     case TokenType.Operator:
-                        lastOp = token;
+                        var op = opFactory.Create(token.Value);
+                        if (operations.Count > 0 && operations.Peek().Priority <= op.Priority)
+                            ResolveCurrentOperator(expressions, operations);
+                        operations.Push(op);
+
                         gotToken = tokens.MoveNext();
+                        break;
+
+                    // For parenthesis, we have to move to the next token before
+                    // doing recursion so that the nested call start on the inner
+                    // expression.
+                    case TokenType.OpeningParenthesis:
+                        gotToken = tokens.MoveNext();
+                        expressions.Push(ParseExpr(tokens));
+                        break;
+
+                    // when we see the closing parenthesis, we simulate an end of
+                    // file so that we go back to the caller immediatly
+                    case TokenType.ClosingParenthesis:
+                        tokens.MoveNext();
+                        gotToken = false;
                         break;
                     default:
                         throw Unexpected(token);
                 }
 
-                if (lastOp != null && pipe.Count >= 2)
-                {
-                    var op = opFactory.Create(lastOp.Value).AddChildren(pipe);
-                    lastOp = null;
-                    pipe.Clear();
-                    pipe.Enqueue(op);
-                }
             }
 
-            return pipe.Dequeue();
+            while (operations.Count > 0)
+                ResolveCurrentOperator(expressions, operations);
+
+            return expressions.Pop();
         }
 
-        private void MoveNext(IEnumerator<Token> tokens)
+        private void ResolveCurrentOperator(Stack<Expr> expressions, Stack<SimpleOperation> operations)
         {
-            var current = tokens.Current;
-            if (!tokens.MoveNext()) throw UnexpectedEndOfFile(current);
-        }
-
-        private double GetVariableValue(string name)
-        {
-            return 0;
+            var op = operations.Pop();
+            op.AddChildren(new[] { expressions.Pop(), expressions.Pop() }.Reverse());
+            expressions.Push(op);
         }
 
         private Exception Unexpected(Token token)
         {
-            return new Exception("Unexpected token" + token.ToString());
-        }
-
-        private Exception UnexpectedEndOfFile(Token token)
-        {
-            return new Exception("Unexpected end of file after" + token.ToString());
+            return new Exception("Unexpected token" + token);
         }
     }
 }

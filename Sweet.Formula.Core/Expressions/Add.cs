@@ -2,7 +2,16 @@
 {
     public class Add : SimpleOperation
     {
-        public Add() : base((a, b) => a + b)
+        public override byte Priority
+        {
+            get
+            {
+                return 5;
+            }
+        }
+
+        public Add()
+            : base((a, b) => a + b)
         {
         }
     }

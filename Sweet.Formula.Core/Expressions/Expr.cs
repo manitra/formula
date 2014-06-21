@@ -4,6 +4,8 @@ using System.IO;
 
 namespace Sweet.Formula.Core.Expressions
 {
+    using Sweet.Formula.Core.Evaluation;
+
     public abstract class Expr
     {
         protected Expr()
@@ -14,7 +16,7 @@ namespace Sweet.Formula.Core.Expressions
         public Expr Parent { get; private set; }
         public IList<Expr> Children { get; private set; }
 
-        public abstract double Eval();
+        public abstract double Eval(Scope scope);
 
         public Expr AddChild(Expr child)
         {

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 
 namespace Sweet.Formula.Core.Expressions
 {
+    using System.Globalization;
+
     public class SimpleOperationFactory
     {
-        private static readonly IDictionary<string, Func<SimpleOperation>> operators =
+        private static readonly IDictionary<string, Func<SimpleOperation>> Operators =
             new Dictionary<string, Func<SimpleOperation>>
                 {
                     { "+", () => new Add()},
@@ -16,12 +18,12 @@ namespace Sweet.Formula.Core.Expressions
 
         public SimpleOperation Create(string @operator)
         {
-            return operators[@operator]();
+            return Operators[@operator]();
         }
 
         public bool IsOperatorChar(char c)
         {
-            return operators.ContainsKey(c.ToString());
+            return Operators.ContainsKey(c.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

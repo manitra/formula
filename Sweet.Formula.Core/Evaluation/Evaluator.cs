@@ -1,34 +1,35 @@
-﻿using System.Collections.Generic;
-using Sweet.Formula.Core.Expressions;
-using Sweet.Formula.Core.Parsing;
-
-namespace Sweet.Formula.Core
+﻿namespace Sweet.Formula.Core.Evaluation
 {
+    using Sweet.Formula.Core.Expressions;
+    using Sweet.Formula.Core.Parsing;
+
     public class Evaluator
     {
         private readonly string expr;
         private readonly Parser parser;
-        private readonly Dictionary<string, double> variables;
+        private readonly Scope scope;
 
         public Evaluator(string expr)
         {
             this.expr = expr;
-            parser = new Parser();
-            variables = new Dictionary<string, double>();
+            this.parser = new Parser();
+            this.scope = new Scope();
         }
 
         public Evaluator Set(string parameterName, double value)
         {
-            variables[parameterName] = value;
+            scope.Set(parameterName, value);
             return this;
         }
 
         public double Eval()
         {
             Expr parsedExpr = parser.Parse(expr);
+#if DEBUG
             System.Console.WriteLine(parsedExpr);
+#endif
 
-            return parsedExpr.Eval();
+            return parsedExpr.Eval(this.scope);
         }
     }
 }

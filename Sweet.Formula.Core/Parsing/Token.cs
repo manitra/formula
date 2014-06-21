@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Sweet.Formula.Core.Parsing
+﻿namespace Sweet.Formula.Core.Parsing
 {
     public class Token
     {
