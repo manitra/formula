@@ -40,7 +40,7 @@ namespace Sweet.Formula.Core.Parsing
                             hasChar = chars.MoveNext();
                             break;
                         case '-':
-                            if (previousToken.Type == TokenType.Operator)
+                            if (previousToken == null || previousToken.Type == TokenType.Operator)
                                 goto case '0';
                             else
                                 goto case '+';

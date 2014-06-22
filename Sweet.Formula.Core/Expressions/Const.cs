@@ -1,5 +1,7 @@
 ﻿namespace Sweet.Formula.Core.Expressions
 {
+    using System.Globalization;
+
     using Sweet.Formula.Core.Evaluation;
 
     public class Const : Expr
@@ -18,7 +20,7 @@
 
         protected override void WriteSelf(System.IO.TextWriter output)
         {
-            output.Write((value < 0 ? "(" : "") + value + (value < 0 ? ")" : ""));
+            output.Write(value.ToString(CultureInfo.InvariantCulture));
         }
     }
 }
