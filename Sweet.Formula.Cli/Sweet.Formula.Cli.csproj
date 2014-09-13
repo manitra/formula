@@ -7,8 +7,8 @@
     <ProjectGuid>{811464CC-498B-431A-BD4C-CBF0C92ADDE9}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Sweet.Formula.Console</RootNamespace>
-    <AssemblyName>Sweet.Formula.Console</AssemblyName>
+    <RootNamespace>Sweet.Formula.Cli</RootNamespace>
+    <AssemblyName>Sweet.Formula.Cli</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

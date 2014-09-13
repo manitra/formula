@@ -1,4 +1,4 @@
-﻿namespace Sweet.Formula.Console
+﻿namespace Sweet.Formula.Cli
 {
     internal class Program
     {
