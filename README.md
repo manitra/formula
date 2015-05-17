@@ -10,11 +10,6 @@ But have a look at the test project to see how to use it.
 
 In the future, you'll be able to `nuget install Sweet.Formula`
 
-```
-#!c#
-
-
-```
 
 ## Contact 
 
