@@ -29,7 +29,7 @@ namespace Sweet.Formula.Core.Parsing
         private Expr ParseExpr(IEnumerator<Token> tokens)
         {
             var expressions = new Stack<Expr>();
-            var operations = new Stack<SimpleOperation>();
+            var operations = new Stack<Operation>();
             var gotToken = true;
 
             while (gotToken)
@@ -46,7 +46,7 @@ namespace Sweet.Formula.Core.Parsing
                         gotToken = tokens.MoveNext();
                         break;
                     case TokenType.Literal:
-                        expressions.Push(new Const(double.Parse(token.Value, CultureInfo.InvariantCulture)));
+                        expressions.Push(new DoubleConst(double.Parse(token.Value, CultureInfo.InvariantCulture)));
                         gotToken = tokens.MoveNext();
                         break;
                     case TokenType.Operator:
@@ -78,13 +78,13 @@ namespace Sweet.Formula.Core.Parsing
 
             }
 
-            while (operations.Count > 0)
+            while (operations.Count > 0) 
                 ResolveCurrentOperator(expressions, operations);
 
             return expressions.Pop();
         }
 
-        private void ResolveCurrentOperator(Stack<Expr> expressions, Stack<SimpleOperation> operations)
+        private void ResolveCurrentOperator(Stack<Expr> expressions, Stack<Operation> operations)
         {
             var op = operations.Pop();
             op.AddChildren(new[] { expressions.Pop(), expressions.Pop() }.Reverse());

@@ -4,7 +4,7 @@
     using Sweet.Formula.Core.Evaluation;
 
     [TestFixture]
-    public class EvaluatorTest
+    public class DoubleEvaluatorTest
     {
         [Test]
         [TestCase(1, "      1     ")]

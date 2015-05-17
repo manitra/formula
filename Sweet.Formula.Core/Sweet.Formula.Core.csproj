@@ -43,11 +43,12 @@
     <Compile Include="Evaluation\Evaluator.cs" />
     <Compile Include="Evaluation\Scope.cs" />
     <Compile Include="Expressions\Add.cs" />
-    <Compile Include="Expressions\Const.cs" />
+    <Compile Include="Expressions\DoubleConst.cs" />
     <Compile Include="Expressions\Div.cs" />
     <Compile Include="Expressions\Expr.cs" />
     <Compile Include="Expressions\Mul.cs" />
-    <Compile Include="Expressions\SimpleOperation.cs" />
+    <Compile Include="Expressions\BinaryOperation.cs" />
+    <Compile Include="Expressions\Operation.cs" />
     <Compile Include="Expressions\SimpleOperationFactory.cs" />
     <Compile Include="Expressions\Sub.cs" />
     <Compile Include="Expressions\TempExpr.cs" />

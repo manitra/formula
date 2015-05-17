@@ -8,5 +8,6 @@
         OpeningParenthesis,
         ClosingParenthesis,
         EndOfFile,
+        Unknown
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Sweet.Formula.Core.Expressions
 {
-    public class Add : SimpleOperation
+    public class Add : BinaryOperation
     {
         public override byte Priority
         {

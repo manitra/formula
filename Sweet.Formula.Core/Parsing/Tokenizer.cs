@@ -67,8 +67,16 @@ namespace Sweet.Formula.Core.Parsing
                         default:
                             if (IsAlpha(c))
                             {
-                                previousToken = new Token { Type = TokenType.Variable, Value = ReadAlpha(chars, ref hasChar) };
+                                previousToken = new Token
+                                {
+                                    Type = TokenType.Variable,
+                                    Value = ReadAlpha(chars, ref hasChar)
+                                };
                                 yield return previousToken;
+                            }
+                            else
+                            {
+                                throw Unexpected(new Token { Type = TokenType.Unknown, Value = c.ToString() });
                             }
                             break;
                     }
@@ -77,14 +85,9 @@ namespace Sweet.Formula.Core.Parsing
             }
         }
 
-        private string ReadNumeric(CharEnumerator chars, ref bool hasChar)
+        private Exception Unexpected(Token token)
         {
-            return ReadWhile(chars, IsNumeric, ref hasChar);
-        }
-
-        private bool IsNumeric(char c)
-        {
-            return c >= '0' && c <= '9' || c == '-' || c == '.';
+            return new Exception("Unexpected token" + token);
         }
 
         private string ReadAlpha(IEnumerator<char> chars, ref bool hasChar)
@@ -92,9 +95,9 @@ namespace Sweet.Formula.Core.Parsing
             return ReadWhile(chars, IsAlpha, ref hasChar);
         }
 
-        private bool IsAlpha(char c)
+        private string ReadNumeric(CharEnumerator chars, ref bool hasChar)
         {
-            return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
+            return ReadWhile(chars, IsNumeric, ref hasChar);
         }
 
         private string ReadWhile(IEnumerator<char> chars, Predicate<char> predicate, ref bool hasChar)
@@ -106,6 +109,16 @@ namespace Sweet.Formula.Core.Parsing
                 hasChar = chars.MoveNext();
             }
             return result.ToString();
+        }
+
+        private bool IsAlpha(char c)
+        {
+            return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
+        }
+
+        private bool IsNumeric(char c)
+        {
+            return c >= '0' && c <= '9' || c == '-' || c == '.';
         }
     }
 }

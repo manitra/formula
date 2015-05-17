@@ -7,8 +7,8 @@ namespace Sweet.Formula.Core.Expressions
 
     public class SimpleOperationFactory
     {
-        private static readonly IDictionary<string, Func<SimpleOperation>> Operators =
-            new Dictionary<string, Func<SimpleOperation>>
+        private static readonly IDictionary<string, Func<BinaryOperation>> Operators =
+            new Dictionary<string, Func<BinaryOperation>>
                 {
                     { "+", () => new Add()},
                     { "-", () => new Sub()},
@@ -16,7 +16,7 @@ namespace Sweet.Formula.Core.Expressions
                     { "/", () => new Div()},
                 };
 
-        public SimpleOperation Create(string @operator)
+        public BinaryOperation Create(string @operator)
         {
             return Operators[@operator]();
         }

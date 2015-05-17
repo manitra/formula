@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 
+using Sweet.Formula.Core.Evaluation;
+
 namespace Sweet.Formula.Core.Expressions
 {
-    using Sweet.Formula.Core.Evaluation;
-
     public abstract class Expr
     {
         protected Expr()

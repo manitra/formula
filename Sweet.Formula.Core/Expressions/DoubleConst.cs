@@ -4,23 +4,23 @@
 
     using Sweet.Formula.Core.Evaluation;
 
-    public class Const : Expr
+    public class DoubleConst : Expr
     {
-        private readonly double value;
+        private readonly double _value;
 
-        public Const(double value)
+        public DoubleConst(double value)
         {
-            this.value = value;
+            _value = value;
         }
 
         public override double Eval(Scope scope)
         {
-            return value;
+            return _value;
         }
 
         protected override void WriteSelf(System.IO.TextWriter output)
         {
-            output.Write(value.ToString(CultureInfo.InvariantCulture));
+            output.Write(_value.ToString(CultureInfo.InvariantCulture));
         }
     }
 }
